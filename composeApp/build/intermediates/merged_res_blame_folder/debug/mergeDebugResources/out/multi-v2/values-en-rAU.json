@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "org.example.project.composeApp-mergeDebugResources-33:/values-en-rAU/values-en-rAU.xml",
+            "outputFile": "org.example.project.composeApp-mergeDebugResources-34:/values-en-rAU/values-en-rAU.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Lele\\.gradle\\caches\\8.14.3\\transforms\\eb25d8225424edb43bb3070bcc619006\\transformed\\ui-release\\res\\values-en-rAU\\values-en-rAU.xml",

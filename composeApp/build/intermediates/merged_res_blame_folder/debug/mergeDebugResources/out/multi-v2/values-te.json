@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "org.example.project.composeApp-mergeDebugResources-33:/values-te/values-te.xml",
+            "outputFile": "org.example.project.composeApp-mergeDebugResources-34:/values-te/values-te.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Lele\\.gradle\\caches\\8.14.3\\transforms\\ef299a539279c6a943913c26e6056388\\transformed\\material3\\res\\values-te\\values-te.xml",
