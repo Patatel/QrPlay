@@ -15,10 +15,14 @@ import androidx.compose.ui.unit.dp        // ✅ Gestion des tailles en DP (Dens
 import org.example.project.screens.HomeScreen
 import org.example.project.screens.NoteScreen
 import org.example.project.screens.ScannerScreen
+import org.example.project.ui.theme.QrPlayTheme
 
 // --- Définition d'une fonction composable racine ---
 @Composable
 fun App() {                               // ✅ Point d’entrée principal de ton UI multiplateforme
+
+
+
     var currentTab by remember {           // ✅ Variable d’état : mémorise l’onglet sélectionné
         mutableStateOf("Home")             // ✅ Onglet par défaut : “Home”
     }
@@ -56,10 +60,14 @@ fun App() {                               // ✅ Point d’entrée principal de 
             contentAlignment = Alignment.Center // ✅ Centre le contenu verticalement et horizontalement
         ) {
             // ✅ Affiche le contenu selon l’onglet actif
-            when (currentTab) {
-                "Home" -> HomeScreen()
-                "Scanner" -> ScannerScreen()
-                "Note" -> NoteScreen()
+            QrPlayTheme(darkTheme = darkTheme) {
+                AppScaffold(isWide = isWide) { tab ->
+                    when (currentTab) {
+                        "Home" -> HomeScreen()
+                        "Scanner" -> ScannerScreen()
+                        "Note" -> NoteScreen()
+                    }
+                }
             }
         }
     }
