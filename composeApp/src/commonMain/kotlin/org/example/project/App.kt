@@ -1,72 +1,81 @@
 package org.example.project
 
-// --- Import des composants Compose nécessaires ---
-import androidx.compose.material3.*       // ✅ Composants Material 3 (Scaffold, BottomAppBar, etc.)
-import androidx.compose.foundation.layout.* // ✅ Outils de mise en page (Row, Column, etc.)
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Note
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Note
-import androidx.compose.runtime.*         // ✅ Gestion des états réactifs (remember, mutableStateOf, etc.)
-import androidx.compose.ui.Alignment      // ✅ Alignement des éléments dans la mise en page
-import androidx.compose.ui.Modifier       // ✅ Conteneur de modificateurs (padding, fillMaxSize, etc.)
-import androidx.compose.ui.unit.dp        // ✅ Gestion des tailles en DP (Density-independent Pixels)
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import org.example.project.screens.HomeScreen
 import org.example.project.screens.NoteScreen
 import org.example.project.screens.ScannerScreen
 import org.example.project.ui.theme.QrPlayTheme
 
-// --- Définition d'une fonction composable racine ---
 @Composable
-fun App() {                               // ✅ Point d’entrée principal de ton UI multiplateforme
+fun App() {
+    // 1) Stop aux refs non résolues : on ne passe pas darkTheme manuellement,
+    //    on laisse QrPlayTheme prendre la valeur système (ou, si tu veux forcer :)
+    // val useDark = isSystemInDarkTheme()
 
+    var currentTab by remember { mutableStateOf("Home") }
 
-
-    var currentTab by remember {           // ✅ Variable d’état : mémorise l’onglet sélectionné
-        mutableStateOf("Home")             // ✅ Onglet par défaut : “Home”
-    }
-
-    // ✅ Structure principale Material 3
-    Scaffold(
-        bottomBar = {                      // ✅ Barre de navigation en bas d’écran
-            BottomAppBar {
-                // --- Boutons de navigation ---
-                NavigationBarItem(
-                    selected = currentTab == "Home",      // ✅ Vérifie si onglet actif
-                    onClick = { currentTab = "Home" },    // ✅ Action au clic
-                    icon = { Icon(Icons.Default.Home, null) },  // ✅ Icône de la page
-                    label = { Text("Home") }              // ✅ Libellé
-                )
-                NavigationBarItem(
-                    selected = currentTab == "Scanner",
-                    onClick = { currentTab = "Scanner" },
-                    icon = { Icon(Icons.Default.CameraAlt, null) },
-                    label = { Text("Scanner") }
-                )
-                NavigationBarItem(
-                    selected = currentTab == "Note",
-                    onClick = { currentTab = "Note" },
-                    icon = { Icon(Icons.Default.Note, null) },
-                    label = { Text("Note") }
-                )
+    QrPlayTheme /* (darkTheme = useDark) */ {
+        Scaffold(
+            bottomBar = {
+                NavigationBar {
+                    NavigationBarItem(
+                        selected = currentTab == "Home",
+                        onClick = { currentTab = "Home" },
+                        icon = { Icon(Icons.Filled.Home, contentDescription = null) },
+                        label = { Text("Home") }
+                    )
+                    NavigationBarItem(
+                        selected = currentTab == "Scanner",
+                        onClick = { currentTab = "Scanner" },
+                        icon = { Icon(Icons.Filled.CameraAlt, contentDescription = null) },
+                        label = { Text("Scanner") }
+                    )
+                    NavigationBarItem(
+                        selected = currentTab == "Note",
+                        onClick = { currentTab = "Note" },
+                        icon = { Icon(Icons.AutoMirrored.Filled.Note, contentDescription = null) },
+                        label = { Text("Note") }
+                    )
+                }
             }
-        }
-    ) { paddingValues ->                   // ✅ “paddingValues” contient la zone sous la barre de navigation
-        Box(
-            modifier = Modifier
-                .fillMaxSize()             // ✅ Remplit tout l’espace disponible
-                .padding(paddingValues),   // ✅ Évite de recouvrir la bottom bar
-            contentAlignment = Alignment.Center // ✅ Centre le contenu verticalement et horizontalement
-        ) {
-            // ✅ Affiche le contenu selon l’onglet actif
-            QrPlayTheme(darkTheme = darkTheme) {
-                AppScaffold(isWide = isWide) { tab ->
-                    when (currentTab) {
-                        "Home" -> HomeScreen()
-                        "Scanner" -> ScannerScreen()
-                        "Note" -> NoteScreen()
-                    }
+        ) { paddingValues ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
+                contentAlignment = Alignment.Center
+            ) {
+                when (currentTab) {
+                    "Home" -> HomeScreen(
+                        onOpenScanner = { currentTab = "Scanner" },  // 3) callbacks requis
+                        onOpenNotes = { currentTab = "Note" }
+                    )
+                    "Scanner" -> ScannerScreen(
+                        onBack = { currentTab = "Home" }              // 3) callback requis
+                    )
+                    "Note" -> NoteScreen(
+                        onBack = { currentTab = "Home" }              // 3) callback requis
+                    )
                 }
             }
         }
