@@ -1,0 +1,27 @@
+CREATE TABLE qr_items (
+    id TEXT NOT NULL PRIMARY KEY,
+    text TEXT NOT NULL,
+    source TEXT NOT NULL,      -- QrSource sérialisé en String
+    createdAt TEXT NOT NULL,   -- Instant sérialisé en String (ISO)
+    favorite INTEGER NOT NULL DEFAULT 0,
+    label TEXT
+);
+
+insertItem:
+INSERT INTO qr_items(id, text, source, createdAt, favorite, label)
+VALUES (?, ?, ?, ?, ?, ?);
+
+selectAll:
+SELECT * FROM qr_items
+ORDER BY createdAt DESC;
+
+selectById:
+SELECT * FROM qr_items
+WHERE id = ?;
+
+deleteById:
+DELETE FROM qr_items
+WHERE id = ?;
+
+deleteAll:
+DELETE FROM qr_items;
